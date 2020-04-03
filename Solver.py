@@ -9,70 +9,71 @@ board = [
     [1,2,0,0,0,7,4,0,0],
     [0,4,9,2,0,6,0,0,7]
 ]
+dimension = len(board[0])
+factor = int(dimension**0.5)
 
-
-def solve(bo):
-    find = find_empty(bo) #Base case for recursion
+def solve(Board):
+    find = find_empty(Board) #Base case for recursion
     if not find:
         return True
     else:
-        row, col = find
+        row, column = find
 
     for i in range(1,10):
-        if valid(bo, i, (row, col)):
-            bo[row][col] = i
+        if valid(Board, i, (row, column)):
+            Board[row][column] = i
 
-            if solve(bo):
+            if solve(Board):
                 return True
 
-            bo[row][col] = 0
+            Board[row][column] = 0
 
     return False
 
 
-def valid(bo, num, pos):
+def valid(Board, num, rowAndcol):
     # Check Row
-    for i in range(len(bo[0])):
-        if bo[pos[0]][i] == num and pos[1] != i:
+    for i in range(dimension):
+        if Board[rowAndcol[0]][i] == num and rowAndcol[1] != i:
             return False
 
     # Check Column
-    for i in range(len(bo)):
-        if bo[i][pos[1]] == num and pos[0] != i:
+    for i in range(dimension):
+        if Board[i][rowAndcol[1]] == num and rowAndcol[0] != i:
             return False
 
     # Check each Box
-    box_x = pos[1] // 3
-    box_y = pos[0] // 3
+    box_x = rowAndcol[1] // factor
+    box_y = rowAndcol[0] // factor
 
-    for i in range(box_y*3, box_y*3 + 3):
-        for j in range(box_x*3, box_x*3 + 3):
-            if bo[i][j] == num and (i,j) != pos:
+    for i in range(box_y*factor, box_y*factor + factor):
+        for j in range(box_x*factor, box_x*factor + factor):
+            if Board[i][j] == num and (i,j) != rowAndcol:
                 return False
 
     return True
 
-def print_board(bo):
+def print_board(Board):
 
-    for i in range(len(bo)):
-        if i % 3 == 0 and i != 0:
+    for i in range(len(Board)):
+        if i % factor == 0 and i != 0:
             print("- - - - - - - - - - - -")
 
-        for j in range(len(bo[0])):
+        for j in range(dimension):
             if j%3 == 0 and j!= 0:
                 print(" | ",end="")
 
             if j == 8:
-                print(bo[i][j])
+                print(Board[i][j])
             else:
-                print(str(bo[i][j]) + " ",end="")
+                print(str(Board[i][j]) + " ",end="")
 
 
-def find_empty(bo):
-    for i in range(len(bo)):
-        for j in range(len(bo[0])):
-            if bo[i][j] == 0:
-                return (i , j) # row,col(row first,then column)
+def find_empty(Board):
+    for i in range(len(Board)):
+        for j in range(dimension):
+            if Board[i][j] == 0:
+                return (i , j) # row,column(row first,then column)
 
     return None 
 
